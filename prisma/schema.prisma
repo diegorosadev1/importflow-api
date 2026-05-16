@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Supplier {
+  id         String   @id @default(uuid())
+
+  name       String
+  code       String?
+  contact    String?
+  notes      String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  catalogs   Catalog[]
+  batches    Batch[]
+  products   Product[]
+}
+
+model Catalog {
+  id                String   @id @default(uuid())
+
+  supplier_id       String
+
+  name              String
+  file_url          String?
+  original_filename String?
+  file_type         String?
+
+  status            String   @default("not_started")
+
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  supplier          Supplier @relation(fields: [supplier_id], references: [id])
+
+  batches           Batch[]
+}
+
+model Batch {
+  id               String   @id @default(uuid())
+
+  catalog_id       String
+  supplier_id      String
+
+  name             String?
+
+  batch_number     Int
+
+  status           String   @default("pending")
+
+  products_count   Int      @default(0)
+
+  xlsx_url         String?
+
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  catalog          Catalog  @relation(fields: [catalog_id], references: [id])
+
+  supplier         Supplier @relation(fields: [supplier_id], references: [id])
+
+  products         Product[]
+}
+
+model Product {
+  id                 String   @id @default(uuid())
+
+  batch_id           String
+  supplier_id        String
+
+  /**
+   * ERP
+   */
+
+  prod_descricao     String?
+
+  prod_modelo        String?
+
+  forn_id            String?
+
+  prod_grupo_id      String?
+
+  prod_custo_valor   Float?
+
+  codigo_forn        String?
+
+  prod_ncm           String?
+
+  prod_gtin          String? @default("SEM GTIN")
+
+  /**
+   * CONTROLE INTERNO
+   */
+
+  cor                String?
+
+  situation          String? @default("pendente")
+
+  reviewed           Boolean @default(false)
+
+  imported           Boolean @default(false)
+
+  deleted            Boolean @default(false)
+
+  /**
+   * CARACTERÍSTICAS ERP
+   */
+
+  caracteristica1    String?
+
+  caracteristica2    String?
+
+  caracteristica3    String?
+
+  caracteristica4    String?
+
+  caracteristica5    String?
+
+  caracteristica6    String?
+
+  /**
+   * MEDIDAS
+   */
+
+  prod_altura        Float?
+
+  prod_largura       Float?
+
+  prod_profund       Float?
+
+  prod_volumes       Int?
+
+  /**
+   * DATAS
+   */
+
+  created_at         DateTime @default(now())
+
+  updated_at         DateTime @updatedAt
+
+  /**
+   * RELAÇÕES
+   */
+
+  batch              Batch    @relation(fields: [batch_id], references: [id])
+
+  supplier           Supplier @relation(fields: [supplier_id], references: [id])
+}

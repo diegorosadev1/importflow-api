@@ -1,0 +1,74 @@
+export const CHARACTERISTICS = {
+
+  ENCOSTO: [
+    "ENCOSTO ESTOFADO",
+    "ENCOSTO LAMINADO",
+    "ENCOSTO TELA",
+    "ENCOSTO TELA SEXTAVADA",
+    "ENCOSTO RIPADO",
+    "ENCOSTO CINAMOMO",
+    "ENCOSTO MADEIRA",
+  ],
+
+  ASSENTO: [
+    "ASSENTO ESTOFADO",
+    "ASSENTO LAMINADO",
+    "ASSENTO MADEIRA",
+  ],
+
+  TAMPO: [
+    "TAMPO LAQUEADO",
+    "TAMPO COM VIDRO",
+    "TAMPO LAQUEADO + VIDRO",
+    "TAMPO VIDRO",
+    "TAMPO BP",
+    "TAMPO MARBLE",
+    "TAMPO TAUARI",
+    "TAMPO LAMINADO",
+    "TAMPO COM CANTOS GARRAFA",
+    "TAMPO BARRIL",
+  ],
+
+  BASE: [
+    "BASE MADEIRA",
+    "BASE AÇO",
+    "BASE CC",
+    "BASE NT",
+    "BASE A535",
+    "BASE A536",
+  ],
+
+  MATERIAIS: [
+    "LAMINADO",
+    "RIPADO",
+    "TELA",
+    "VIDRO",
+    "MARBLE",
+    "BP",
+    "TAUARI",
+    "CINAMOMO",
+  ],
+
+  FORMATOS: [
+    "REDONDA",
+    "QUADRADA",
+    "BISTRÔ",
+    "ALTA",
+    "OVAL",
+    "BARRIL",
+  ],
+
+  FUNCIONAIS: [
+    "2 PORTAS",
+    "3 PORTAS",
+    "4 PORTAS",
+    "2 GAVETAS",
+  ],
+
+  ESPECIAIS: [
+    "TELA SEXTAVADA",
+    "CANTOS GARRAFA",
+    "PEGADOR",
+    "PORTAS LISAS",
+  ]
+}

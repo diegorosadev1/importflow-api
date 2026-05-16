@@ -1,68 +1,75 @@
-import express from 'express'
-import cors from 'cors'
-import ExcelJS from 'exceljs'
-import path from 'path'
-import fs from 'fs'
+import express from "express";
+import cors from "cors";
+import ExcelJS from "exceljs";
+import path from "path";
+import fs from "fs";
+import { supplierRoutes } from "./modules/suppliers/routes";
+import { catalogRoutes } from "./modules/catalogs/routes";
+import { batchRoutes } from './modules/batches/routes'
+import { productRoutes } from './modules/products/routes'
+import extractTestRoute from "./extractor/tests/extract-test";
 
-const app = express()
+const app = express();
 
-app.use(cors())
+app.use(cors());
 
 app.use(
   express.json({
-    limit: '10mb'
-  })
-)
+    limit: "10mb",
+  }),
+);
 
-app.get('/health', (req, res) => {
+app.use("/suppliers", supplierRoutes);
+app.use("/catalogs", catalogRoutes);
+app.use('/batches', batchRoutes)
+app.use('/products', productRoutes)
+app.use(extractTestRoute);
+
+app.get("/health", (req, res) => {
   return res.json({
-    status: 'ok'
-  })
-})
+    status: "ok",
+  });
+});
 
-app.post('/generate-xlsx', async (req, res) => {
+app.post("/generate-xlsx", async (req, res) => {
   try {
-    const { supplier, products } = req.body
+    const { supplier, products } = req.body;
 
     /**
      * VALIDAÇÕES
      */
     if (!supplier) {
       return res.status(400).json({
-        error: 'Fornecedor obrigatório'
-      })
+        error: "Fornecedor obrigatório",
+      });
     }
 
     if (!products || !Array.isArray(products)) {
       return res.status(400).json({
-        error: 'Products inválido'
-      })
+        error: "Products inválido",
+      });
     }
 
     /**
      * TEMPLATE
      */
-    const workbook = new ExcelJS.Workbook()
+    const workbook = new ExcelJS.Workbook();
 
-    const templatePath = path.resolve(
-      'src',
-      'templates',
-      'template.xlsx'
-    )
+    const templatePath = path.resolve("src", "templates", "template.xlsx");
 
-    await workbook.xlsx.readFile(templatePath)
+    await workbook.xlsx.readFile(templatePath);
 
     console.log(
-      'Sheets disponíveis:',
-      workbook.worksheets.map(w => w.name)
-    )
+      "Sheets disponíveis:",
+      workbook.worksheets.map((w) => w.name),
+    );
 
-    const worksheet = workbook.getWorksheet(1)
+    const worksheet = workbook.getWorksheet(1);
 
     if (!worksheet) {
       return res.status(500).json({
-        error: 'Planilha não encontrada'
-      })
+        error: "Planilha não encontrada",
+      });
     }
 
     /**
@@ -88,8 +95,8 @@ app.post('/generate-xlsx', async (req, res) => {
       prod_altura: 26,
       prod_largura: 27,
       prod_profund: 28,
-      prod_volumes: 29
-    }
+      prod_volumes: 29,
+    };
 
     /**
      * PRODUTOS COMEÇAM NA LINHA 3
@@ -98,70 +105,61 @@ app.post('/generate-xlsx', async (req, res) => {
       /**
        * DEFAULTS AUTOMÁTICOS
        */
-      product.forn_id = supplier
-      product.prod_gtin = 'SEM GTIN'
+      product.forn_id = supplier;
+      product.prod_gtin = "SEM GTIN";
 
-      const rowNumber = index + 3
+      const rowNumber = index + 3;
 
       Object.entries(columns).forEach(([key, column]) => {
-        const value = product[key]
+        const value = product[key];
 
         worksheet.getCell(rowNumber, column).value =
-          value !== undefined ? value : ''
-      })
-    })
+          value !== undefined ? value : "";
+      });
+    });
 
-    console.log('Primeiro produto:')
-    console.log(products[0])
+    console.log("Primeiro produto:");
+    console.log(products[0]);
 
-    console.log('Teste célula B3:')
-    console.log(
-      worksheet.getCell(3, 2).value
-    )
+    console.log("Teste célula B3:");
+    console.log(worksheet.getCell(3, 2).value);
 
     /**
      * GARANTIR PASTA GENERATED
      */
-    const generatedDir = path.resolve('generated')
+    const generatedDir = path.resolve("generated");
 
     if (!fs.existsSync(generatedDir)) {
-      fs.mkdirSync(generatedDir)
+      fs.mkdirSync(generatedDir);
     }
 
     /**
      * NOME DO ARQUIVO
      */
-    const safeSupplier = supplier
-      .replace(/[^a-zA-Z0-9-_]/g, '_')
+    const safeSupplier = supplier.replace(/[^a-zA-Z0-9-_]/g, "_");
 
-    const fileName = `${safeSupplier}.xlsx`
+    const fileName = `${safeSupplier}.xlsx`;
 
-    const outputPath = path.resolve(
-      generatedDir,
-      fileName
-    )
+    const outputPath = path.resolve(generatedDir, fileName);
 
     /**
      * GERAR XLSX
      */
-    await workbook.xlsx.writeFile(outputPath)
+    await workbook.xlsx.writeFile(outputPath);
 
     /**
      * DOWNLOAD
      */
-    return res.download(
-      outputPath,
-      fileName
-    )
+    return res.download(outputPath, fileName);
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
     return res.status(500).json({
-      error: 'Erro ao gerar XLSX'
-    })
+      error: "Erro ao gerar XLSX",
+    });
   }
-})
+});
 
 app.listen(3001, () => {
-  console.log('API rodando na porta 3001')
-})
+  console.log("API rodando na porta 3001");
+});

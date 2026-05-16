@@ -1,0 +1,46 @@
+export const COLOR_ALIASES: Record<string, string> = {
+  "AME": "AMENDOA",
+  "CAN": "CANELA",
+  "OFF W": "OFF WHITE",
+  "OFF": "OFF WHITE",
+  "BR": "BRANCO",
+  "PR": "PRETO",
+  "NT": "NATURAL",
+}
+
+export const COLORS = [
+  "AMENDOA",
+  "CASTANHO",
+  "PRETO",
+  "BRANCO",
+  "OFF WHITE",
+  "PINHÃO",
+  "NOGUEIRA",
+  "CANELA",
+  "PÉROLA",
+  "CAFÉ",
+  "CARVALHO NATURAL",
+  "CARVALHO NOGAL",
+  "CARVALHO ÉBANO",
+  "CARVALHO CASTANHO",
+  "CINAMOMO NATURAL",
+  "CINAMOMO NOGUEIRA",
+  "CINAMOMO ÉBANO",
+  "DOURADO",
+  "CHAMPAGNE",
+  "FENDY",
+  "TEXTURIZADO BRANCO",
+  "TEXTURIZADO PRETA",
+  "TEXTURIZADO OFF WHITE",
+  "TEXTURIZADO CAFÉ",
+  "TEXTURIZADO PÉROLA",
+  "CARRARA",
+  "CALACATRA",
+  "CONCRETO"
+]
+
+export const FINISHES: Record<string, string> = {
+  "CC/BR": "CASTANHO CLARO + BRANCO",
+  "CC/OFF": "CASTANHO CLARO + OFF WHITE",
+  "CC/CCV": "CASTANHO CLARO + CARVALHO",
+}
